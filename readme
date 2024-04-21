@@ -1,0 +1,8 @@
+
+json data sent by Raspberry pi Sensors.
+
+{
+    "sensor_id": "sensor_001",
+    "temperature": 23.5,
+    "error_state": false
+}
