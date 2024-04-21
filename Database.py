@@ -34,8 +34,13 @@ class SQLink:
         self.db.commit()
 
     def Add_Data(self, data):
-        self.cursor.execute(f'''INSERT INTO {self.tablename} ({data[0][0]}, {data[1][0]}, {data[2][0]}, {data[3][0]}) VALUES (?, ?, ?, ?)''', 
-               (data[0][1], data[1][1], data[2][1], data[3][1]))
+
+        cols = ', '.join([x[0] for x in data])
+
+        marks = ', '.join(['?' for _ in data])
+
+        self.cursor.execute(f'''INSERT INTO {self.tablename} ({cols}) VALUES ({marks})''', 
+               ([x[1] for x in data]))
 
         self.db.commit()
 

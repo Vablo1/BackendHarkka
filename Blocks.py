@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 
-class SensorData(BaseModel):
+class BlockID(BaseModel):
     sensor_id: str
-    temperature: float
-    error_state: bool
+    block_id: str
