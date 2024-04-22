@@ -3,5 +3,7 @@ from pydantic import BaseModel
 class SensorData(BaseModel):
     sensor_id: str
     temperature: float
-    error_state: bool
 
+class SensorState(BaseModel):
+    sensor_id: str
+    sensor_state: bool

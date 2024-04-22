@@ -13,7 +13,7 @@ class SQLink:
         self.cursor.execute(f"PRAGMA table_info({self.tablename})")
         rows = self.cursor.fetchall()
 
-        if len(rows) == 0:
+        if len(rows) == 0 or len(rows) != len(self.columns):
             return False
 
         for x in range(len(rows)):
@@ -29,8 +29,6 @@ class SQLink:
 
         self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.tablename}  ({columns_str})''')
 
-        print(f'''CREATE TABLE IF NOT EXISTS {self.tablename}  ({columns_str})''')
-
         self.db.commit()
 
     def Add_Data(self, data):
@@ -44,9 +42,11 @@ class SQLink:
 
         self.db.commit()
 
-    def Get_Data(self):
-        self.cursor.execute(f'''SELECT * FROM {self.tablename} LIMIT 5''')
-
+    def Get_Data_By_Column(self, column_name, value):
+        self.cursor.execute(f'''SELECT * FROM {self.tablename} WHERE {column_name} = ?''', (value,))
         rows = self.cursor.fetchall()
-
         return rows
+
+    def Del_Data_By_Column(self, column_name, value):
+        self.cursor.execute(f'''DELETE FROM {self.tablename} WHERE {column_name} = ?''', (value,))
+        self.db.commit()
