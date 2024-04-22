@@ -1,3 +1,5 @@
+Program uses SQLite to store Sensor readings the given SensorDB.db includes some sensors and a few weeks of readings
+
 
 json data sent by Raspberry pi Sensors.
 

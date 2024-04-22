@@ -42,16 +42,39 @@ class SQLink:
 
         self.db.commit()
 
-    def Get_Data_By_Column(self, column_name, value):
-        self.cursor.execute(f'''SELECT * FROM {self.tablename} WHERE {column_name} = ?''', (value,))
+    def Get_Data_By_Column(self, column_name, value, orderby='', limit=0):
+
+        query = f'''SELECT * FROM {self.tablename} WHERE {column_name} = ?'''
+        params = [value]
+        
+        if orderby in self.columns:
+            query += f''' ORDER BY {orderby}'''
+
+        if limit != 0:
+            query += f''' LIMIT {limit}'''
+
+        query += ';'
+
+        self.cursor.execute(query, tuple(params))
+
         rows =  self.cursor.fetchall()
-        return rows
+
+        return [{name[0]: x[n] for n, name in enumerate(self.columns)} for x in rows] 
 
     def Del_Data_By_Column(self, column_name, value):
         self.cursor.execute(f'''DELETE FROM {self.tablename} WHERE {column_name} = ?''', (value,))
+        self.db.commit()
+
+    def Del_Data_By_Col_Double(self, column1, value1, column2, value2):
+        self.cursor.execute(f'''DELETE FROM {self.tablename} WHERE {column1} = ? AND {column2} = ?''', (value1, value2))
         self.db.commit()
 
     def Get_All_Data(self):
         self.cursor.execute(f'''SELECT * FROM {self.tablename}''')
         rows =  self.cursor.fetchall()
         return rows
+
+    def Get_Custom_Data(self, search):
+        self.cursor.execute(search)
+        rows = self.cursor.fetchall()
+        return [{name[0]: x[n] for n, name in enumerate(self.columns)} for x in rows]
