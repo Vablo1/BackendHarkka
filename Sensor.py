@@ -7,3 +7,7 @@ class SensorData(BaseModel):
 class SensorState(BaseModel):
     sensor_id: str
     sensor_state: bool
+
+class BlockID(BaseModel):
+    sensor_id: str
+    block_id: str
