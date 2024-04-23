@@ -2,7 +2,7 @@ import sqlite3
 
 Filename = 'SensorDB.db'
 
-Columns = [('block_id', 'text'), ('sensor_id', 'text'), ('sensor_state', 'boolean')]
+Columns = [('block_id', 'text'), ('sensor_id', 'text')]
 
 Table = 'blocks'
 
@@ -71,15 +71,8 @@ class BlockSQL:
         self.cursor.execute(f'''DELETE FROM {Table} WHERE {column_name} = ?''', (value,))
         self.db.commit()
 
-    def Del_Data_By_Col_Double(self, column1, value1, column2, value2):
-        self.cursor.execute(f'''DELETE FROM {Table} WHERE {column1} = ? AND {column2} = ?''', (value1, value2))
-        self.db.commit()
-
     def Get_All_Data(self):
         self.cursor.execute(f'''SELECT * FROM {Table}''')
         rows =  self.cursor.fetchall()
         return rows
 
-    def Get_Custom_Data(self, search):
-        self.cursor.execute(search)
-        return self.cursor.fetchall()

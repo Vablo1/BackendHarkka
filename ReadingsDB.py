@@ -2,7 +2,7 @@ import sqlite3
 
 Filename = 'SensorDB.db'
 
-Columns = [('sensor_id', 'text'), ('time', 'text'), ('temperature', 'real')]
+Columns = [('id', 'INTEGER PRIMARY KEY'), ('sensor_id', 'text'), ('time', 'text'), ('temperature', 'real')]
 
 Table = 'readings'
 
@@ -72,15 +72,21 @@ class DataSQL:
         self.cursor.execute(f'''DELETE FROM {Table} WHERE {column_name} = ?''', (value,))
         self.db.commit()
 
-    def Del_Data_By_Col_Double(self, column1, value1, column2, value2):
-        self.cursor.execute(f'''DELETE FROM {Table} WHERE {column1} = ? AND {column2} = ?''', (value1, value2))
+    def Del_Data_By_Id(self, id):
+        self.cursor.execute(f'''DELETE FROM {Table} WHERE id = ?''', (id,))
         self.db.commit()
-
-    def Get_All_Data(self):
-        self.cursor.execute(f'''SELECT * FROM {Table}''')
-        rows =  self.cursor.fetchall()
-        return rows
-
-    def Get_Custom_Data(self, search):
         self.cursor.execute(search)
         return self.cursor.fetchall()
+
+    def Get_Data_Between(self, time1, time2):
+
+        if time1 < time2:
+            start, end = time1, time2
+        else:
+            end, start = time1, time2
+
+        self.cursor.execute(f'''SELECT * FROM {Table} WHERE time >= ? AND time <= ?''', (start, end))
+
+        rows =  self.cursor.fetchall()
+
+        return [{name[0]: x[n] for n, name in enumerate(Columns)} for x in rows] 
