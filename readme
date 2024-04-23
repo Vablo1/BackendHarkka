@@ -8,3 +8,8 @@ json data sent by Raspberry pi Sensors.
     "temperature": 23.5,
     "error_state": false
 }
+
+My Opinion why "Measurement Delete" endpoint should not exist.
+- median of lets say an hour of measurements would ignore any extreme readings
+- error readings could be used to analyze when and where errors happen
+- it is important not to bog down the backend with unnecessary operations
