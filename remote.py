@@ -81,9 +81,6 @@ async def get_sensor_by_block(block_id: str):
         state = statesql.Get_Latest_state(x.get('sensor_id'))
         temp = datasql.Get_Latest_Temp(x.get('sensor_id'))
 
-        print(state)
-        print(temp)
-
         if len(state) > 0:
             current['state'] = state[0].get('new_state')
         else:
