@@ -1,15 +1,13 @@
-Program uses SQLite to store Sensor readings the given SensorDB.db includes some sensors and a few weeks of readings
+Sovellus on jaettu kahteen eri pääsykohtaan, mikä mahdollistaa anturin näkyvän backendin erottamisen helposti vain paikallisverkkoon. Projekti sisältää testi SQLite-tietokantatiedoston (SensorsDB.db), jonka voit turvallisesti poistaa tarvittaessa.
 
+Voit käynnistää prosessit eri aikoina tai samanaikaisesti seuraavilla komennoilla:
+    - uvicorn remote:RemoteApp --reload --port 8000
+    - uvicorn local:LocalApp --reload --port 8001
 
-json data sent by Raspberry pi Sensors.
+Tämän jälkeen testisivu löytyy osoitteista:
+    - 127.0.0.1:8000/docs
+    - 127.0.0.1:8001/docs
 
-{
-    "sensor_id": "sensor_001",
-    "temperature": 23.5,
-    "error_state": false
-}
+SQLite-tietokantatiedostoa voit tarkastella esimerkiksi osoitteessa https://sqliteviewer.app/ tai käyttämällä VSCode-lisäosaa.
 
-My Opinion why "Measurement Delete" endpoint should not exist.
-- median of lets say an hour of measurements would ignore any extreme readings
-- error readings could be used to analyze when and where errors happen
-- it is important not to bog down the backend with unnecessary operations
+Lisäsin mittausarvon poiston projektiin, mutta henkilökohtaisesti en usko, että sitä tarvitaan. Median ei kuitenkaan käytä virheellisiä arvoja, ja virheellisiä arvoja käyttäen voidaan tutkia, milloin ja missä antureissa ilmenee virheitä. Backend on suunniteltu maksimaalista toiminnallisuutta tukemaan, ei pelkästään frontendin tarpeisiin.
