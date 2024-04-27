@@ -12,7 +12,7 @@ class StateSQL:
     @classmethod
     def get_instance(cls):
         if cls.myinstance is None:
-            cls.myinstance = BlockSQL()
+            cls.myinstance = StateSQL()
         return cls.myinstance
 
     def __init__(self):
@@ -53,8 +53,8 @@ class StateSQL:
         query = f'''SELECT * FROM {Table} WHERE {column_name} = ?'''
         params = [value]
         
-        if orderby in Columns:
-            query += f''' ORDER BY {orderby}'''
+        if orderby != '':
+            query += f''' ORDER BY {orderby} DESC'''
 
         if limit != 0:
             query += f''' LIMIT {limit}'''
@@ -74,5 +74,13 @@ class StateSQL:
     def Get_All_Data(self):
         self.cursor.execute(f'''SELECT * FROM {Table}''')
         rows =  self.cursor.fetchall()
-        return rows
+        return [{name[0]: x[n] for n, name in enumerate(Columns)} for x in rows] 
+
+    def Get_Latest_state(self, sensor_id):
+        self.cursor.execute(f'''SELECT * FROM {Table}
+                                WHERE sensor_id is ?
+                                ORDER BY time DESC
+                                LIMIT 1''', (sensor_id,))
+        rows = self.cursor.fetchall()
+        return [{name[0]: x[n] for n, name in enumerate(Columns)} for x in rows] 
 

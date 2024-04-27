@@ -52,17 +52,16 @@ class DataSQL:
     def Get_Data_By_Column(self, column_name, value, orderby='', limit=0):
 
         query = f'''SELECT * FROM {Table} WHERE {column_name} = ?'''
-        params = [value]
         
-        if orderby in Columns:
-            query += f''' ORDER BY {orderby}'''
+        if orderby != '':
+            query += f''' ORDER BY {orderby} DESC'''
 
         if limit != 0:
             query += f''' LIMIT {limit}'''
 
         query += ';'
 
-        self.cursor.execute(query, tuple(params))
+        self.cursor.execute(query, (value,))
 
         rows =  self.cursor.fetchall()
 
@@ -78,15 +77,37 @@ class DataSQL:
         self.cursor.execute(search)
         return self.cursor.fetchall()
 
-    def Get_Data_Between(self, time1, time2):
+    def Get_Data_Between(self, sensor_id , time1, time2):
 
         if time1 < time2:
             start, end = time1, time2
         else:
             end, start = time1, time2
 
-        self.cursor.execute(f'''SELECT * FROM {Table} WHERE time >= ? AND time <= ?''', (start, end))
+        self.cursor.execute(f'''SELECT * FROM {Table} WHERE time >= ? AND time <= ? AND sensor_id == ?''', (start, end, sensor_id))
 
         rows =  self.cursor.fetchall()
 
         return [{name[0]: x[n] for n, name in enumerate(Columns)} for x in rows] 
+
+    def Get_Latest_Temp(self, sensor_id):
+        self.cursor.execute(f'''SELECT * FROM {Table}
+                                WHERE sensor_id is ?
+                                ORDER BY time DESC
+                                LIMIT 1''', (sensor_id,))
+        rows = self.cursor.fetchall()
+        return [{name[0]: x[n] for n, name in enumerate(Columns)} for x in rows] 
+
+
+
+
+    # rows = sql.Get_Custom_Data(f'''SELECT sensor_id, time, temperature FROM {sql.tablename}
+    #                                 WHERE sensor_id = '{sensor_id}' 
+    #                                 AND time IN (
+    #                                     SELECT min(time)
+    #                                     FROM {sql.tablename}
+    #                                     WHERE sensor_id = '{sensor_id}'
+    #                                     GROUP BY strftime('%Y-%m-%dT%H', time)
+    #                                 )
+    #                                 ORDER BY time
+    #                                 LIMIT 24;''')

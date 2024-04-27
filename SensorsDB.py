@@ -53,8 +53,8 @@ class BlockSQL:
         query = f'''SELECT * FROM {Table} WHERE {column_name} = ?'''
         params = [value]
         
-        if orderby in Columns:
-            query += f''' ORDER BY {orderby}'''
+        if orderby != '':
+            query += f''' ORDER BY {orderby} DESC'''
 
         if limit != 0:
             query += f''' LIMIT {limit}'''
@@ -74,5 +74,4 @@ class BlockSQL:
     def Get_All_Data(self):
         self.cursor.execute(f'''SELECT * FROM {Table}''')
         rows =  self.cursor.fetchall()
-        return rows
-
+        return [{name[0]: x[n] for n, name in enumerate(Columns)} for x in rows]
