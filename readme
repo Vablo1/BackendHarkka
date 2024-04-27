@@ -1,5 +1,9 @@
 Sovellus on jaettu kahteen eri pääsykohtaan, mikä mahdollistaa anturin näkyvän backendin erottamisen helposti vain paikallisverkkoon. Projekti sisältää testi SQLite-tietokantatiedoston (SensorsDB.db), jonka voit turvallisesti poistaa tarvittaessa.
 
+Projekti vaatii seuraavat lisäykset:
+pip install uvicorn
+pip install fastapi
+
 Voit käynnistää prosessit eri aikoina tai samanaikaisesti seuraavilla komennoilla:
     - uvicorn remote:RemoteApp --reload --port 8000
     - uvicorn local:LocalApp --reload --port 8001
